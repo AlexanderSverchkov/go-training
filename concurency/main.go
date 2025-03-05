@@ -4,7 +4,6 @@ import (
 	"fmt"
 	"math"
 	"math/rand"
-	randv2 "math/rand/v2"
 	"sync"
 	"time"
 )
@@ -31,10 +30,11 @@ func main() {
 }
 
 func createSliceWithNumbers(chInt chan int, channelSize int) {
-	rand.Seed(time.Now().UnixNano())
+	SEED := time.Now().UnixNano()       // Dynamic seed based on current time
+	r := rand.New(rand.NewSource(SEED)) // Create rand.Rand instance outside the loop
 	randomInts := make([]int, channelSize)
 	for i := 0; i < channelSize; i++ {
-		randomInts[i] = randv2.IntN(100)
+		randomInts[i] = r.Intn(100)
 	}
 	for i := 0; i < channelSize; i++ {
 		chInt <- randomInts[i]
