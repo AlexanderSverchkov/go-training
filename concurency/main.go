@@ -15,27 +15,23 @@ func main() {
 	var wg sync.WaitGroup
 	wg.Add(3)
 	go func() {
+		defer wg.Done()
 		createSliceWithNumbers(chInt, channelSize)
-		wg.Done()
-		close(chInt)
+
 	}()
 
 	go func() {
 		defer wg.Done()
 		squareNumbers(chInt, chSquare, channelSize)
 	}()
-	go func() {
-		wg.Wait()
-		close(chSquare)
-	}()
 
 	go func() {
 		defer wg.Done()
 		printChSquare(chSquare)
 	}()
-
-	//wg.Wait()
-	//close(chSquare)
+	//go func() {
+	wg.Wait()
+	//}()
 
 }
 
@@ -56,10 +52,11 @@ func squareNumbers(chInt chan int, chSquare chan int, channelSize int) {
 		val := <-chInt
 		chSquare <- int(math.Pow(float64(val), 2))
 	}
-	//close(chInt)
+	close(chInt)
 }
 func printChSquare(chSquare chan int) {
 	for res := range chSquare {
 		fmt.Println(res)
 	}
+	close(chSquare)
 }
