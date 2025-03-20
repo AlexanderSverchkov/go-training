@@ -15,6 +15,7 @@ func NewRandomIntHandler(router *http.ServeMux) {
 
 func (handler *RandomIntHandler) GetRandomInt() http.HandlerFunc {
 	return func(w http.ResponseWriter, req *http.Request) {
+		rand.New()
 		randInt := rand.IntN(10)
 		w.WriteHeader(http.StatusOK)
 		w.Write([]byte(strconv.Itoa(randInt)))
