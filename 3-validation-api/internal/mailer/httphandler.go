@@ -71,13 +71,7 @@ func (handler *MailerHttpHandler) VerifyEmail() http.HandlerFunc {
 	return func(w http.ResponseWriter, req *http.Request) {
 		hash := req.PathValue("hash")
 		email := req.PathValue("email")
-		data, err := files.ReadFile(handler.jsonStorageFile)
-		if err != nil {
-			response.JsonResponse(w, err.Error(), 500)
-			return
-		}
-		parsedJson := make(map[string]string)
-		err = json.Unmarshal(data, &parsedJson)
+		parsedJson, err := files.ReadAndLoadFileInJson(handler.jsonStorageFile)
 		if err != nil {
 			response.JsonResponse(w, err.Error(), 500)
 			return
